@@ -3,7 +3,6 @@
 <p>Create Database nodeapi</p>
 <p>node migrate.js </p>
 
-
 <h1>Register</h1>
 <p>	POST METHOD: localhost:3000/register</p>
 <code>

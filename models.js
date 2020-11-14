@@ -3,6 +3,7 @@ const sequelize = new Sequelize('nodeapi', 'root', '', {
     host: 'localhost',
     dialect: 'mysql'
 });
+//  Create Table Peoduct Coloumn name_product  price
 const Product = sequelize.define('Product', {
     name_product: {
         type: DataTypes.STRING,
@@ -16,6 +17,7 @@ const Product = sequelize.define('Product', {
 
 
 
+//  Create table User coloumn username And Password 
 const User = sequelize.define('User', {
     username:{
         type: DataTypes.STRING,

@@ -9,6 +9,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
+
+// Reister
 app.post('/register', (req, res) => {
     const data1 = req.body
     const form_data = {username: data1["username"], password: data1["password"]}
@@ -22,6 +24,8 @@ app.post('/register', (req, res) => {
     })    
 })
 
+
+//  Create token
 
 app.post('/token', (req, res) => { 
     const data1 = req.body
@@ -43,6 +47,7 @@ app.post('/token', (req, res) => {
     })
 })
 
+// Verifiy Token
 
 app.use((req, res, next) => {
     const token = req.header('token')
@@ -68,6 +73,8 @@ app.use((req, res, next) => {
     })
  
 })
+
+// Read Data
 app.get('/', (req, res) => {
     product.findAll({
         attributes: ['id', 'price', 'name_product']
@@ -82,6 +89,8 @@ app.get('/', (req, res) => {
         res.json({msg: 'Erorr'})
     })
 })
+
+//  Create Data
 app.post('/', (req, res) => {
     console.log(req.body);
     const data = {name_product: req.body["name_product"], price: req.body["price"]}

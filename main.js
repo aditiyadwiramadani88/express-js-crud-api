@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
-
 // Reister
 app.post('/register', (req, res) => {
     const data1 = req.body

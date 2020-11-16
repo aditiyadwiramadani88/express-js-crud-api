@@ -7,12 +7,15 @@ const user = models.user
 const jwt = require('jsonwebtoken')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+const bcrypt = require('bcrypt')
+const salt = bcrypt.genSaltSync(10)
 
 
-// Reister
+// Register
 app.post('/register', (req, res) => {
     const data1 = req.body
-    const form_data = {username: data1["username"], password: data1["password"]}
+    const haspw = bcrypt.hashSync(data1["password"], salt)
+    const form_data = {username: data1["username"], password: haspw}
     user.create(form_data)
     .then(data => {
          console.log(data);
@@ -37,7 +40,8 @@ app.post('/token', (req, res) => {
             res.jsonp({msg: 'User not fout'})
         }
         const user = data[0].dataValues
-        if(data1["password"] == user.password){ 
+        const chekpw = bcrypt.compareSync(data1["password"], user.password)
+        if(chekpw){ 
             const token = jwt.sign({ token: user.username }, 'node')
             res.jsonp({ token: token })
         }

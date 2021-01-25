@@ -11,7 +11,7 @@ const bcrypt = require('bcrypt')
 const salt = bcrypt.genSaltSync(10)
 
 
-// Register
+//Register
 app.post('/register', (req, res) => {
     const data1 = req.body
     const haspw = bcrypt.hashSync(data1["password"], salt)
@@ -77,49 +77,39 @@ app.use((req, res, next) => {
  
 })
 
+
+
+
 // Read Data
-app.get('/', (req, res) => {
-    product.findAll({
-        attributes: ['id', 'price', 'name_product']
-    }).then(data => {
-        const data1 = []
-        data.forEach(elem => {
-            data1.push(elem.dataValues)
-        })
-         res.jsonp(data1)
-    }).catch(data =>{ 
-        res.status(402)
-        res.json({msg: 'Erorr'})
-    })
+app.get('/', async (req, res) => {
+    let d = await product.findAll(
+        {attributes: ['id', 'price', 'name_product']})
+    const json_d = res.jsonp(d)
+    
 })
 
 //  Create Data
 app.post('/', (req, res) => {
-    console.log(req.body);
     const data = {name_product: req.body["name_product"], price: req.body["price"]}
-    console.log(data);
-    product.create(data).catch(err => { 
-        res.jsonp({msg: 'error Create data '})
-    }).then(row => { 
-        res.jsonp(data) 
+    product.create(data)
+    .catch(err => {
+        res.jsonp({ msg: 'error Create data ' })
     })
-  
+    .then(row => {
+        res.jsonp(data)
+    })
 })
 
 //  details
-app.get('/:id([0-9+])', (req, res) => {
+app.get('/:id([0-9+])', async(req, res) => {
    const id = req.params.id
-   product.findAll({
+   let data = await product.findAll({
        where:{
            id: id
        }, 
-       attributes: ['id', 'price', 'name_product']
-   }).then(data => {
-       res.jsonp(data[0].dataValues)
-   }).catch(data => {
-       res.status(404)
-       res.jsonp({msg: "error"})
-   })
+       attributes: ['id', 'price', 'name_product']}
+       )
+       res.jsonp(data)
 })
 
 // edit 
@@ -130,12 +120,14 @@ app.put('/:id([0-9+])', (req, res) => {
             where:{
                 id: id
             }
-        }).then(data => {
+        })
+        .then(data => {
            if(data == [0]){ 
-                  res.jsonp({msg: "error"})
+                res.jsonp({msg: "error"})
            }
-                res.send(data1)  
-        }).catch(data => { 
+            res.send(data1)  
+        })
+        .catch(() => { 
             res.status(402)
             res.jsonp({msg: 'error'})
         })
@@ -149,15 +141,16 @@ app.delete('/:id([0-9+])', (req, res) => {
         where: {
             id: id
         }
-    }).then(data => {
+    })
+    .then(data => {
         if(!data){
             res.status(402)
-           res.jsonp({"msg": "error "})
+            res.jsonp({"msg": "error "})
         }
-            res.status(202)
-            res.jsonp({msg: "success Delete data"})
-        
-    }).catch(data => {
+        res.status(202)
+        res.jsonp({msg: "success Delete data"})    
+    })
+    .catch(data => {
         res.status(402)
         res.jsonp({msg: "error "});
     })
